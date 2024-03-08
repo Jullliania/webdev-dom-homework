@@ -10,6 +10,8 @@
 <body>
   <div class="container">
     <ul id="list-comments" class="comments">
+
+
     </ul>
     <div class="add-form">
       <input type="text" id="name-input" class="add-form-name" placeholder="Введите ваше имя" value="" />
@@ -26,6 +28,8 @@
     background-color: red;
   }
 </style>
+
+
 <script>
   "use strict";
   const buttonElement = document.getElementById('add-button')
@@ -53,18 +57,32 @@
 
   const likeButton = () => {
     const likeButtonElements = document.querySelectorAll('.like-button')
-    for (let likeButtonElement of likeButtonElements)
-      likeButtonElement.addEventListener('click', () => {
-        if (arrayUsers[likeButtonElement.dataset.index].validButtonLike) {
-          arrayUsers[likeButtonElement.dataset.index].likes--;
-          arrayUsers[likeButtonElement.dataset.index].validButtonLike = false;
-        } else {
-          arrayUsers[likeButtonElement.dataset.index].likes++;
-          arrayUsers[likeButtonElement.dataset.index].validButtonLike = true;
-        }
 
-        renderUsers();
+    likeButtonElements.forEach((el, index) => {
+      el.addEventListener('click', () => {
+        if (arrayUsers[index].validButtonLike) {
+          arrayUsers[index].likes--
+        } else {
+          arrayUsers[index].likes++
+        }
+        arrayUsers[index].validButtonLike = !arrayUsers[index].validButtonLike
+        renderUsers()
       })
+
+    })
+
+    // for (let likeButtonElement of likeButtonElements)
+    //   likeButtonElement.addEventListener('click', () => {
+    //     if (arrayUsers[likeButtonElement.dataset.index].validButtonLike) {
+    //       arrayUsers[likeButtonElement.dataset.index].likes--;
+    //       arrayUsers[likeButtonElement.dataset.index].validButtonLike = false;
+    //     } else {
+    //       arrayUsers[likeButtonElement.dataset.index].likes++;
+    //       arrayUsers[likeButtonElement.dataset.index].validButtonLike = true;
+    //     }
+
+    //     renderUsers();
+    //   })
 
   }
 
@@ -95,6 +113,15 @@
 
   renderUsers();
 
+  function formatDate() {
+    let currentDate = new Date()
+    const nowDate = currentDate.getDate() < 10 ? '0' + currentDate.getDate() : currentDate.getDate()
+    const month = currentDate.getMonth() < 10 ? ('0' + (currentDate.getMonth() + 1)) : (currentDate.getMonth() + 1)
+    const minutes = currentDate.getMinutes() < 10 ? '0' + currentDate.getMinutes() : currentDate.getMinutes()
+    let commentDate = (nowDate) + "." + (month) + "." + currentDate.getFullYear() + " " + currentDate.getHours() + ":" + (minutes)
+    return commentDate
+  }
+
   buttonElement.addEventListener('click', () => {
 
     nameInputElement.classList.remove("error");
@@ -108,17 +135,13 @@
       return;
     }
 
-    // отображение даты и времени
-    let currentDate = new Date()
-    const nowDate = currentDate.getDate() < 10 ? '0' + currentDate.getDate() : currentDate.getDate()
-    const month = currentDate.getMonth() < 10 ? ('0' + (currentDate.getMonth() + 1)) : (currentDate.getMonth() + 1)
-    const minutes = currentDate.getMinutes() < 10 ? '0' + currentDate.getMinutes() : currentDate.getMinutes()
-    let commentDate = (nowDate) + "." + (month) + "." + currentDate.getFullYear() + " " + currentDate.getHours() + ":" + (minutes)
+
+
 
 
     arrayUsers.push({
       name: nameInputElement.value,
-      dateOfComment: commentDate,
+      dateOfComment: formatDate(),
       text: textInputElement.value,
       likes: 0,
       validButtonLike: false
@@ -131,4 +154,5 @@
 
   });
 </script>
+
 </html>
