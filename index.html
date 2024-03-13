@@ -10,8 +10,6 @@
 <body>
   <div class="container">
     <ul id="list-comments" class="comments">
-
-
     </ul>
     <div class="add-form">
       <input type="text" id="name-input" class="add-form-name" placeholder="Введите ваше имя" value="" />
@@ -37,6 +35,11 @@
   const nameInputElement = document.getElementById('name-input')
   const textInputElement = document.getElementById('text-input')
   const commentsElement = document.getElementById('comments')
+
+
+  const name = document.getElementById("name-input");
+  const text = document.getElementById("text-input");
+
 
   const arrayUsers = [
     {
@@ -71,6 +74,9 @@
 
     })
 
+
+   
+
     // for (let likeButtonElement of likeButtonElements)
     //   likeButtonElement.addEventListener('click', () => {
     //     if (arrayUsers[likeButtonElement.dataset.index].validButtonLike) {
@@ -85,6 +91,8 @@
     //   })
 
   }
+
+
 
 
   const renderUsers = () => {
@@ -113,6 +121,9 @@
 
   renderUsers();
 
+
+
+
   function formatDate() {
     let currentDate = new Date()
     const nowDate = currentDate.getDate() < 10 ? '0' + currentDate.getDate() : currentDate.getDate()
@@ -135,10 +146,6 @@
       return;
     }
 
-
-
-
-
     arrayUsers.push({
       name: nameInputElement.value,
       dateOfComment: formatDate(),
@@ -146,6 +153,15 @@
       likes: 0,
       validButtonLike: false
     })
+
+    renderUsers();
+
+    for (const comment of document.querySelectorAll(".comment")) {
+      comment.addEventListener("click", ()=> {
+        text.value = `%BEGIN_QUOTE${COMMENTS[Comment.dataset.index].name};
+        ${comments[comment.dataset.index].text}END_QUOTE%`;
+      });
+    }
 
     renderUsers();
 
