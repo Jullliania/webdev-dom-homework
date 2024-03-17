@@ -22,7 +22,7 @@
   </div>
 </body>
 <style>
-  .error {
+ .error {
     background-color: red;
   }
 </style>
@@ -35,10 +35,6 @@
   const nameInputElement = document.getElementById('name-input')
   const textInputElement = document.getElementById('text-input')
   const commentsElement = document.getElementById('comments')
-
-
-  const name = document.getElementById("name-input");
-  const text = document.getElementById("text-input");
 
 
   const arrayUsers = [
@@ -73,37 +69,39 @@
       })
 
     })
-
-
-   
-
-    // for (let likeButtonElement of likeButtonElements)
-    //   likeButtonElement.addEventListener('click', () => {
-    //     if (arrayUsers[likeButtonElement.dataset.index].validButtonLike) {
-    //       arrayUsers[likeButtonElement.dataset.index].likes--;
-    //       arrayUsers[likeButtonElement.dataset.index].validButtonLike = false;
-    //     } else {
-    //       arrayUsers[likeButtonElement.dataset.index].likes++;
-    //       arrayUsers[likeButtonElement.dataset.index].validButtonLike = true;
-    //     }
-
-    //     renderUsers();
-    //   })
-
   }
 
+   
+    const safe = (string) => {
+      return string.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    }
+
+    String.prototype.safe = function () {
+      return this.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+    }
+
+    // добавили ответ на комментарий
+    const commentAdd = () => {
+      const comments = document.querySelectorAll('.comment')
+      for (let comment of comments)
+        comment.addEventListener('click', (event) => {
+          const user = arrayUsers[comment.dataset.index]
+          textInputElement.value = ` > ${user.text.replaceAll('<br>', '\n')}\n\n${user.name}, `
+          event.stopPropagation();
+        })
+    }
 
 
 
   const renderUsers = () => {
     const userHtml = arrayUsers.map((user, index) => {
-      return `<li class="comment">
+      return `<li class="comment" data-index= '${index}'>
         <div class="comment-header">
           <div>${user.name}</div>
           <div>${user.dateOfComment}</div>
         </div>
         <div class="comment-body">
-          <div class="comment-text">
+          <div class="comment-text" data-index= '${index}'>
             ${user.text}
           </div>
         </div>
@@ -117,6 +115,7 @@
     }).join('');
     listElement.innerHTML = userHtml;
     likeButton();
+    commentAdd();
   };
 
   renderUsers();
@@ -145,24 +144,15 @@
       textInputElement.classList.add("error");
       return;
     }
-    
+
 
     arrayUsers.push({
-      name: nameInputElement.value,
+      name: safe(nameInputElement.value),
       dateOfComment: formatDate(),
-      text: textInputElement.value,
+      text: safe(textInputElement.value).replaceAll('\n', '<br>'),
       likes: 0,
       validButtonLike: false
     })
-
-    renderUsers();
-
-    for (const comment of document.querySelectorAll(".comment")) {
-      comment.addEventListener("click", ()=> {
-        text.value = `%BEGIN_QUOTE${COMMENTS[Comment.dataset.index].name};
-        ${comments[comment.dataset.index].text}END_QUOTE%`;
-      });
-    }
 
     renderUsers();
 
